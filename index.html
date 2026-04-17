@@ -171,6 +171,7 @@
         }
         h2 { color: #4a3b2f; margin-bottom: 20px; }
         select { margin-bottom: 20px; padding: 8px; border-radius: 12px; margin-right: 15px; }
+        .news-img { max-width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -218,7 +219,7 @@
     <div id="administrationPage" class="page"><h2>👔 АДМИНИСТРАЦИЯ</h2><div id="adminList"></div></div>
     <div id="contactsPage" class="page">
         <h2>📞 КОНТАКТЫ</h2>
-        <p>📍 Адрес: г. Кукмор, ул. Майская, д. 4</p>
+        <p>📍 Адрес: г. Кукмор, ул. Майская</p>
         <p>📞 Телефон: +7 (843) 123-45-67</p>
         <p>✉️ Email: school@licey.ru</p>
     </div>
@@ -235,7 +236,7 @@
         <button id="fontMinusBtn">А–</button>
         <button id="contrastBtn">Высокий контраст</button>
     </div>
-    <div>© 2026 Лицей А. М. Булатова | г. Кукмор, ул. Майская, д. 4</div>
+    <div>© 2026 Лицей А. М. Булатова | г. Кукмор, ул. Майская</div>
 
     <div class="admin-panel">
         <details>
@@ -244,7 +245,7 @@
             <button onclick="checkAdmin()">Войти</button>
             <div id="adminTools" style="display:none; margin-top: 15px;">
                 <h4>Редактировать новости (JSON)</h4>
-                <textarea id="newsEditor" rows="6"></textarea><button onclick="saveNews()">Сохранить новости</button><hr>
+                <textarea id="newsEditor" rows="10"></textarea><button onclick="saveNews()">Сохранить новости</button><hr>
                 <h4>Редактировать учителей (JSON)</h4>
                 <textarea id="teachersEditor" rows="6"></textarea><button onclick="saveTeachers()">Сохранить учителей</button><hr>
                 <h4>Редактировать кружки (JSON)</h4>
@@ -280,8 +281,8 @@
 <script>
     let siteData = {
         news: [
-            { date: "17.04.2026", titleRu: "Субботник", fullRu: "Сегодня 17 апреля прошёл общешкольный субботник. Убрали территорию лицея и парка. Спасибо всем участникам!", titleEn: "Cleanup Day", fullEn: "Today, April 17, a school-wide cleanup day took place." },
-            { date: "10.04.2026", titleRu: "Победа в олимпиаде по русскому языку", fullRu: "Поздравляем Иванову Анну, ученицу 9А класса, с победой!", titleEn: "Olympiad Victory", fullEn: "Congratulations to Anna Ivanova, 9A student, on her victory!" }
+            { date: "17.04.2026", titleRu: "Субботник", fullRu: "Сегодня 17 апреля прошёл общешкольный субботник. Убрали территорию лицея и парка. Спасибо всем участникам!", titleEn: "Cleanup Day", fullEn: "Today, April 17, a school-wide cleanup day took place.", img: "" },
+            { date: "10.04.2026", titleRu: "Победа в олимпиаде по русскому языку", fullRu: "Поздравляем Иванову Анну, ученицу 9А класса, с победой!", titleEn: "Olympiad Victory", fullEn: "Congratulations to Anna Ivanova, 9A student, on her victory!", img: "" }
         ],
         teachers: [
             { nameRu: "Иванова М.И.", subjectRu: "Русский язык", cabinet: 12, nameEn: "Ivanova M.I.", subjectEn: "Russian" },
@@ -300,12 +301,12 @@
             }
         },
         administration: [
-            { nameRu: "Усманова Лира Рафисовна", postRu: "Директор", hoursRu: "ср 14:00-16:00", nameEn: "Usmanova L.R.", postEn: "Director", hoursEn: "Wed 14:00-16:00" }
+            { nameRu: "Усманова Лира Рафиковна", postRu: "Директор", hoursRu: "ср 14:00-16:00", nameEn: "Usmanova L.R.", postEn: "Director", hoursEn: "Wed 14:00-16:00" }
         ],
         historyRu: "Лицей основан в 1995 году. Носит имя А. М. Булатова — выдающегося педагога.",
         historyEn: "The lyceum was founded in 1995. It bears the name of A. M. Bulatov, an outstanding teacher.",
-        contactsRu: "📍 Адрес: г. Кукмор, ул. Майская, д. 4\n📞 Телефон: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
-        contactsEn: "📍 Address: Kukmor, Mayskaya str., 4\n📞 Phone: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
+        contactsRu: "📍 Адрес: г. Кукмор, ул. Майская\n📞 Телефон: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
+        contactsEn: "📍 Address: Kukmor, May street\n📞 Phone: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
         socialRu: "📘 VK (скоро)\n📱 Telegram\n💬 WhatsApp",
         socialEn: "📘 VK (soon)\n📱 Telegram\n💬 WhatsApp",
         supportRu: "📧 rhajrullin116@outlook.com\n📞 +79628525841",
@@ -336,12 +337,13 @@
             <div class="news-item" onclick="openFullscreen(${idx})">
                 <div class="news-date">${n.date}</div>
                 <div>${lang === 'ru' ? n.titleRu : n.titleEn}</div>
+                ${n.img ? `<img src="${n.img}" class="news-img" alt="news image">` : ''}
             </div>
         `).join('');
     }
     window.openFullscreen = function(idx) {
         let n = siteData.news[idx];
-        let content = `<h2>${n.date}</h2><p>${lang === 'ru' ? n.fullRu : n.fullEn}</p>`;
+        let content = `<h2>${n.date}</h2><p>${lang === 'ru' ? n.fullRu : n.fullEn}</p>${n.img ? `<img src="${n.img}" style="max-width:100%; border-radius:12px; margin-top:15px;">` : ''}`;
         document.getElementById('fullscreenContent').innerHTML = content;
         document.getElementById('fullscreenModal').style.display = 'flex';
     };
@@ -410,7 +412,7 @@
     }
     function checkAdmin() {
         let pass = document.getElementById('adminPass').value;
-        if(pass === 'valtix5751') {
+        if(pass === 'admin123') {
             document.getElementById('adminTools').style.display = 'block';
             document.getElementById('newsEditor').value = JSON.stringify(siteData.news, null, 2);
             document.getElementById('teachersEditor').value = JSON.stringify(siteData.teachers, null, 2);
