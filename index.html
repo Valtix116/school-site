@@ -171,6 +171,8 @@
         }
         h2 { color: #4a3b2f; margin-bottom: 20px; }
         select { margin-bottom: 20px; padding: 8px; border-radius: 12px; margin-right: 15px; }
+        .history-content img { max-width: 100%; border-radius: 12px; margin-bottom: 15px; }
+        .history-content p { margin-bottom: 12px; }
         .news-img { max-width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
@@ -215,7 +217,7 @@
     </div>
     <div id="teachersPage" class="page"><h2>👩‍🏫 НАШИ УЧИТЕЛЯ</h2><div id="teachersList"></div></div>
     <div id="clubsPage" class="page"><h2>🎨 КРУЖКИ</h2><div id="clubsList"></div></div>
-    <div id="historyPage" class="page"><h2>📜 ИСТОРИЯ</h2><p>Лицей основан в 1995 году. Носит имя А. М. Булатова — выдающегося педагога.</p></div>
+    <div id="historyPage" class="page"><h2>📜 ИСТОРИЯ</h2><div id="historyText" class="history-content"></div></div>
     <div id="administrationPage" class="page"><h2>👔 АДМИНИСТРАЦИЯ</h2><div id="adminList"></div></div>
     <div id="contactsPage" class="page">
         <h2>📞 КОНТАКТЫ</h2>
@@ -254,8 +256,8 @@
                 <textarea id="scheduleEditor" rows="10"></textarea><button onclick="saveSchedule()">Сохранить расписание</button><hr>
                 <h4>Редактировать администрацию (JSON)</h4>
                 <textarea id="adminEditor" rows="6"></textarea><button onclick="saveAdministration()">Сохранить администрацию</button><hr>
-                <h4>Редактировать историю (текст)</h4>
-                <textarea id="historyEditor" rows="3"></textarea><button onclick="saveHistory()">Сохранить историю</button><hr>
+                <h4>Редактировать историю (HTML)</h4>
+                <textarea id="historyEditor" rows="10"></textarea><button onclick="saveHistory()">Сохранить историю</button><hr>
                 <h4>Редактировать контакты (текст)</h4>
                 <textarea id="contactsEditor" rows="4"></textarea><button onclick="saveContacts()">Сохранить контакты</button><hr>
                 <h4>Редактировать соцсети (текст)</h4>
@@ -303,8 +305,7 @@
         administration: [
             { nameRu: "Усманова Лира Рафиковна", postRu: "Директор", hoursRu: "ср 14:00-16:00", nameEn: "Usmanova L.R.", postEn: "Director", hoursEn: "Wed 14:00-16:00" }
         ],
-        historyRu: "Лицей основан в 1995 году. Носит имя А. М. Булатова — выдающегося педагога.",
-        historyEn: "The lyceum was founded in 1995. It bears the name of A. M. Bulatov, an outstanding teacher.",
+        history: "<img src='https://cdn.culture.ru/images/843e30b5-941e-5ca2-8abf-822fa5b9b780' style='max-width:100%; border-radius:12px; margin-bottom:15px;'><p><strong>Школа основана в 1869 году.</strong> За 155-летнюю историю лицей претерпел немало изменений.</p><p>В 2008 году школа была полностью реконструирована. В 2011 году ей присвоен статус многопрофильного лицея.</p><p>Здание лицея современно оборудовано: 42 учебных кабинета, 2 спортивных зала, хореографический зал, медицинский кабинет, актовый зал на 400 мест, столовоя на 190 посадочных мест, библиотека.</p><p>Действует лицейский стадион, реконструированный в 2015 году.</p><p>Обучается <strong>943 ученика</strong> в 35 класс-комплектах.</p><p><strong>Миссия лицея:</strong> развитие творческой, интеллектуальной, социально-адаптированной личности на основе профильного и углубленного изучения предметов и системы внеклассной работы.</p>",
         contactsRu: "📍 Адрес: г. Кукмор, ул. Майская\n📞 Телефон: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
         contactsEn: "📍 Address: Kukmor, May street\n📞 Phone: +7 (843) 123-45-67\n✉️ Email: school@licey.ru",
         socialRu: "📘 VK (скоро)\n📱 Telegram\n💬 WhatsApp",
@@ -388,16 +389,19 @@
         document.getElementById('adminList').innerHTML = siteData.administration.map(a => `<div class="card">${lang === 'ru' ? a.postRu : a.postEn}: ${lang === 'ru' ? a.nameRu : a.nameEn} (приём: ${lang === 'ru' ? a.hoursRu : a.hoursEn})</div>`).join('');
     }
     function renderHistory() {
-        document.getElementById('historyText').innerHTML = `<div class="card">${lang === 'ru' ? siteData.historyRu : siteData.historyEn}</div>`;
+        document.getElementById('historyText').innerHTML = siteData.history;
     }
     function renderContacts() {
-        document.getElementById('contactsText').innerHTML = `<div class="card">${(lang === 'ru' ? siteData.contactsRu : siteData.contactsEn).replace(/\n/g,'<br>')}</div>`;
+        let text = lang === 'ru' ? siteData.contactsRu : siteData.contactsEn;
+        document.getElementById('contactsText').innerHTML = `<div class="card">${text.replace(/\n/g,'<br>')}</div>`;
     }
     function renderSocial() {
-        document.getElementById('socialText').innerHTML = `<div class="card">${(lang === 'ru' ? siteData.socialRu : siteData.socialEn).replace(/\n/g,'<br>')}</div>`;
+        let text = lang === 'ru' ? siteData.socialRu : siteData.socialEn;
+        document.getElementById('socialText').innerHTML = `<div class="card">${text.replace(/\n/g,'<br>')}</div>`;
     }
     function renderSupport() {
-        document.getElementById('supportText').innerHTML = `<div class="card">${(lang === 'ru' ? siteData.supportRu : siteData.supportEn).replace(/\n/g,'<br>')}</div>`;
+        let text = lang === 'ru' ? siteData.supportRu : siteData.supportEn;
+        document.getElementById('supportText').innerHTML = `<div class="card">${text.replace(/\n/g,'<br>')}</div>`;
     }
     function renderUI() {
         document.getElementById('siteTitle').innerText = lang === 'ru' ? 'МНОГОПРОФИЛЬНЫЙ ЛИЦЕЙ' : 'MULTIDISCIPLINARY LYCEUM';
@@ -419,7 +423,7 @@
             document.getElementById('clubsEditor').value = JSON.stringify(siteData.clubs, null, 2);
             document.getElementById('scheduleEditor').value = JSON.stringify(siteData.schedule, null, 2);
             document.getElementById('adminEditor').value = JSON.stringify(siteData.administration, null, 2);
-            document.getElementById('historyEditor').value = lang === 'ru' ? siteData.historyRu : siteData.historyEn;
+            document.getElementById('historyEditor').value = siteData.history;
             document.getElementById('contactsEditor').value = lang === 'ru' ? siteData.contactsRu : siteData.contactsEn;
             document.getElementById('socialEditor').value = lang === 'ru' ? siteData.socialRu : siteData.socialEn;
             document.getElementById('supportEditor').value = lang === 'ru' ? siteData.supportRu : siteData.supportEn;
@@ -432,7 +436,7 @@
     function saveClubs() { try { siteData.clubs = JSON.parse(document.getElementById('clubsEditor').value); renderClubs(); saveData(); alert('Кружки сохранены'); } catch(e) { alert('Ошибка JSON'); } }
     function saveSchedule() { try { siteData.schedule = JSON.parse(document.getElementById('scheduleEditor').value); renderScheduleSelectors(); saveData(); alert('Расписание сохранено'); } catch(e) { alert('Ошибка JSON'); } }
     function saveAdministration() { try { siteData.administration = JSON.parse(document.getElementById('adminEditor').value); renderAdministration(); saveData(); alert('Администрация сохранена'); } catch(e) { alert('Ошибка JSON'); } }
-    function saveHistory() { if(lang === 'ru') siteData.historyRu = document.getElementById('historyEditor').value; else siteData.historyEn = document.getElementById('historyEditor').value; renderHistory(); saveData(); alert('История сохранена'); }
+    function saveHistory() { siteData.history = document.getElementById('historyEditor').value; renderHistory(); saveData(); alert('История сохранена'); }
     function saveContacts() { if(lang === 'ru') siteData.contactsRu = document.getElementById('contactsEditor').value; else siteData.contactsEn = document.getElementById('contactsEditor').value; renderContacts(); saveData(); alert('Контакты сохранены'); }
     function saveSocial() { if(lang === 'ru') siteData.socialRu = document.getElementById('socialEditor').value; else siteData.socialEn = document.getElementById('socialEditor').value; renderSocial(); saveData(); alert('Соцсети сохранены'); }
     function saveSupport() { if(lang === 'ru') siteData.supportRu = document.getElementById('supportEditor').value; else siteData.supportEn = document.getElementById('supportEditor').value; renderSupport(); saveData(); alert('Поддержка сохранена'); }
